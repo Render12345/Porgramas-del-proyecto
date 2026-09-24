@@ -1,0 +1,16 @@
+class
+
+crypto key zeroize rsa
+yes
+exit
+
+
+delete flash:vlan.dat 
+
+
+erase startup-config
+
+
+reload
+
+no

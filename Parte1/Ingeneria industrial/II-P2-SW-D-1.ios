@@ -1,0 +1,54 @@
+!conf Switch de distribucion
+enable 
+configure terminal
+
+!parametros basicos
+hostname II-P2-SW-D-1
+ip domain-name equipo5.edu
+banner motd #Acceso restringido#
+enable secret class
+service password-encryption
+
+!console 
+line console 0
+password cisco
+login 
+exit
+
+!ssh
+username admin secret cisco
+crypto key generate rsa
+1024
+ip ssh version 2
+line vty 0 15
+login local
+transport input ssh
+exit
+
+!vlans
+vlan 21
+name Laboratorios_||
+vlan 22
+name Camaras_||
+vlan 23
+name Jefatura_||
+vlan 24
+name Administrativo_||
+vlan 99
+name Admin_TI
+exit
+
+!Asignar puertos de acceso (N/A)
+
+!puertos troncales
+interface range g1/0/1-5
+switchport mode trunk
+exit
+
+!SVI de administracion
+interface vlan 99
+ip address 172.28.36.243 255.255.255.128
+no shutdown
+exit
+ip default-gateway 172.28.36.129
+
