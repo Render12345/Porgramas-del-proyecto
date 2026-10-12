@@ -50,6 +50,17 @@ interface range port-channel 4
 switchport mode trunk
 exit
 
+spanning-tree mode rapid-pvst
+interface range f0/1-24
+spanning-tree portfast
+spanning-tree bpduguard enable
+
+!Configuracion vtp
+vtp version 1
+vtp domain Ingenieria_bioquimica
+vtp password cisco
+vtp mode client
+
 !SVI de administracion
 interface vlan 99
 ip address 172.28.36.234 255.255.255.128

@@ -61,6 +61,28 @@ interface range port-channel 1, 11, 12, 13, 14
 switchport mode trunk
 exit
 
+spanning-tree mode rapid-pvst
+spanning-tree vlan 41-44,99 root secondary 
+
+!Configuracion vtp
+vtp version 1
+vtp domain Biblioteca
+vtp password cisco
+vtp mode server
+
+!vlans
+vlan 41
+name Salas_lectura_BB
+vlan 42
+name Camaras_BB
+vlan 43
+name Jefatura_BB
+vlan 44
+name Control_BB
+vlan 99
+name Admin_TI
+exit
+
 !SVI de administracion
 interface vlan 99
 ip address 172.28.36.233 255.255.255.128

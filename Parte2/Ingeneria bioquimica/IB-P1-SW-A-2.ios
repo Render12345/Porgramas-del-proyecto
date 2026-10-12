@@ -44,11 +44,22 @@ switchport mode access
 switchport access vlan 32
 
 interface range g 0/1-2
-channel-group 1 mode active
+channel-group 2 mode active
 
-interface range port-channel 1
+interface range port-channel 2
 switchport mode trunk
 exit
+
+spanning-tree mode rapid-pvst
+interface range f0/1-24
+spanning-tree portfast
+spanning-tree bpduguard enable
+
+!Configuracion vtp
+vtp version 1
+vtp domain Ingenieria_bioquimica
+vtp password cisco
+vtp mode client
 
 !SVI de administracion
 interface vlan 99

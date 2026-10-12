@@ -55,6 +55,13 @@ interface range f0/1-24
 spanning-tree portfast
 spanning-tree bpduguard enable
 
+!Configuracion vtp
+vtp version 1
+vtp domain Edificio_Central
+vtp password cisco
+vtp mode client
+
+
 
 
 !SVI de administracion

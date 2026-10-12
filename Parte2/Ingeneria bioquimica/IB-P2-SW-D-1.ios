@@ -61,6 +61,28 @@ interface range port-channel 1, 11, 12, 13, 14
 switchport mode trunk
 exit
 
+spanning-tree mode rapid-pvst
+spanning-tree vlan 31-34,99 root secondary 
+
+!Configuracion vtp
+vtp version 1
+vtp domain Ingeneria_bioquimica
+vtp password cisco
+vtp mode server
+
+!!vlans
+vlan 31
+name Laboratorios_IB
+vlan 32
+name Camaras_IB
+vlan 33
+name Jefatura_IB
+vlan 34
+name Administrativos_IB
+vlan 99
+name Admin_TI
+exit
+
 !SVI de administracion
 interface vlan 99
 ip address 172.28.36.238 255.255.255.128
