@@ -247,6 +247,7 @@ no switchport
 ip address 172.28.51.17 255.255.255.252
 no shutdown
 
+!------------------------------------------------------------------
 !Conexiona internet ISP-1
 interface GigabitEthernet1/0/23
 no switchport
@@ -257,7 +258,6 @@ exit
 !RUTA DEFAULT INTERNET
 ip route 0.0.0.0 0.0.0.0 209.165.200.225
 
-
 !conexion tunel a campus 3
 interface tunnel 0
 ip address 192.168.0.2 255.255.255.252
@@ -265,12 +265,14 @@ tunnel source gigabitEthernet1/0/23
 tunnel destination 209.165.200.193
 tunnel mode gre ip
 
+!----------------------------------------------------------------------------
 !Configuracion de ospf
 router ospf 5
 router-id 1.1.1.1
 log-adjacency-changes
 auto-cost reference-bandwidth 10000
 network 172.28.0.0 0.0.255.255 area 0
+network 192.168.0.0 0.0.0.3 area 0
 
 !Configuracion de dhcp
 ! ip dhcp excluded-address 172.28.0.1
