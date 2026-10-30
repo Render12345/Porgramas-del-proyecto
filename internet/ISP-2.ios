@@ -32,7 +32,7 @@ ip address 209.165.201.33 255.255.255.240
 no shutdown
 
 !Enlace punto a punto a C3-R-EDGE
-interface serial0/1/0
+interface serial0/1/1
 description Enlace a C3-R-EDGE
 ip address 209.165.200.222 255.255.255.224
 no shutdown
