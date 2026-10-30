@@ -57,7 +57,15 @@ interface range g1/0/17-18
 channel-group 14 mode active
 
 
-interface range port-channel 1, 11, 12, 13, 14
+interface port-channel 1
+switchport mode trunk
+interface port-channel 11
+switchport mode trunk
+interface port-channel 12
+switchport mode trunk
+interface port-channel 13
+switchport mode trunk
+interface port-channel 14
 switchport mode trunk
 exit
 
@@ -91,3 +99,5 @@ exit
 ip default-gateway 172.28.36.129
 
 
+end
+copy running-config startup-config

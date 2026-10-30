@@ -1,0 +1,43 @@
+!Conf Switch Core CC-P2-SW-C-1
+enable 
+configure terminal
+
+!Parametros basicos
+hostname ISP-2
+ip domain-name equipo5.edu
+banner motd #Acceso restringido - Core CC#
+enable secret class
+service password-encryption
+
+!Console 
+line console 0
+password cisco
+login 
+exit
+
+!SSH
+username admin secret cisco
+crypto key generate rsa
+1024
+ip ssh version 2
+line vty 0 4
+login local
+transport input ssh
+exit
+
+!Enlace punto a punto a proveedor ISP-1
+interface serial0/2/1
+description Enlace al proveedor ISP-1
+ip address 209.165.201.33 255.255.255.240
+no shutdown
+
+!Enlace punto a punto a C3-R-EDGE
+interface serial0/1/0
+description Enlace a C3-R-EDGE
+ip address 209.165.200.222 255.255.255.224
+no shutdown
+exit
+
+!Ruteo estatico
+ip route 0.0.0.0 0.0.0.0 209.165.201.46
+end

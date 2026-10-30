@@ -1,0 +1,114 @@
+!Conf Switch Core CC-P2-SW-C-1
+enable 
+configure terminal
+
+!Parametros basicos
+hostname CC-P2-SW-C-1
+ip domain-name equipo5.edu
+banner motd #Acceso restringido - Core CC#
+enable secret class
+service password-encryption
+
+!Console 
+line console 0
+password cisco
+login 
+exit
+
+!SSH
+username admin secret cisco
+crypto key generate rsa
+1024
+ip ssh version 2
+line vty 0 15
+login local
+transport input ssh
+exit
+
+!Configuracion vtp version 2
+vtp version 2
+vtp domain equipo5
+vtp mode server 
+vtp password cisco 
+
+!VLANs principales
+vlan 51
+ name Admin_PS
+vlan 52
+ name Biblioteca_PS
+vlan 53
+ name Laboratorios_PS
+vlan 54
+ name Salones_PS
+vlan 61
+ name Laboratorio1_CC
+vlan 62
+ name Laboratorio2_CC
+vlan 71
+ name Taller1_AR
+vlan 72
+ name Taller2_AR
+vlan 73
+ name Admin_AR
+vlan 74
+ name Salones_AR
+vlan 98
+ name Admin_IT2
+exit
+
+ip routing
+
+interface vlan 51
+ ip address 172.28.50.225 255.255.255.240
+ no shutdown
+interface vlan 52
+ ip address 172.28.50.193 255.255.255.224
+ no shutdown
+interface vlan 53
+ ip address 172.28.50.241 255.255.255.240
+ no shutdown
+interface vlan 54
+ ip address 172.28.48.1 255.255.255.0
+ no shutdown
+interface vlan 61
+ ip address 172.28.49.129 255.255.255.192
+ no shutdown
+interface vlan 62
+ ip address 172.28.49.193 255.255.255.192
+ no shutdown
+interface vlan 71
+ ip address 172.28.50.1 255.255.255.192
+ no shutdown
+interface vlan 72
+ ip address 172.28.50.65 255.255.255.192
+ no shutdown
+interface vlan 73
+ ip address 172.28.51.1 255.255.255.240
+ no shutdown
+interface vlan 74
+ ip address 172.28.49.1 255.255.255.128
+ no shutdown
+interface vlan 98
+ ip address 172.28.50.129 255.255.255.192
+ no shutdown
+exit
+
+interface GigabitEthernet1/0/24
+description Enlace al campus 1
+no switchport
+ip address 172.28.51.18 255.255.255.252
+no shutdown
+
+! 5. Troncales hacia Switches de Acceso
+interface range GigabitEthernet1/0/1 - 6
+ switchport mode trunk
+ no shutdown
+
+!Configuracion de ospf
+router ospf 5
+router-id 2.2.2.2
+log-adjacency-changes
+auto-cost reference-bandwidth 10000
+network 172.28.0.0 0.0.255.255 area 0
+
+exit

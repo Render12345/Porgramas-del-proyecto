@@ -99,7 +99,15 @@ channel-group 4 mode active
 interface range g1/0/9-10
 channel-group 5 mode active
 
-interface range port-channel 1-5
+interface port-channel 1
+switchport mode trunk
+interface port-channel 2
+switchport mode trunk
+interface port-channel 3
+switchport mode trunk
+interface port-channel 4
+switchport mode trunk
+interface port-channel 5
 switchport mode trunk
 exit
 
@@ -233,65 +241,129 @@ interface VLAN 99
 ip address 172.28.36.129 255.255.255.128
 no shutdown
 
+interface GigabitEthernet1/0/24
+description Enlace al campus 2
+no switchport
+ip address 172.28.51.17 255.255.255.252
+no shutdown
+
+!Conexiona internet ISP-1
+interface GigabitEthernet1/0/23
+no switchport
+description #Enlace a provedor ISP-1#
+ip address 209.165.200.254 255.255.255.224
+no shutdown
+exit
+!RUTA DEFAULT INTERNET
+ip route 0.0.0.0 0.0.0.0 209.165.200.225
+
+
+!conexion tunel a campus 3
+interface tunnel 0
+ip address 192.168.0.2 255.255.255.252
+tunnel source gigabitEthernet1/0/23
+tunnel destination 209.165.200.193
+tunnel mode gre ip
+
+!Configuracion de ospf
+router ospf 5
+router-id 1.1.1.1
+log-adjacency-changes
+auto-cost reference-bandwidth 10000
+network 172.28.0.0 0.0.255.255 area 0
+
 !Configuracion de dhcp
-ip dhcp excluded-address 172.28.0.1
-ip dhcp excluded-address 172.28.32.1
-ip dhcp excluded-address 172.28.39.1
-ip dhcp excluded-address 172.28.39.193
-ip dhcp excluded-address 172.28.39.97
-ip dhcp excluded-address 172.28.40.33
-ip dhcp excluded-address 172.28.40.81
+! ip dhcp excluded-address 172.28.0.1
+! ip dhcp excluded-address 172.28.32.1
+! ip dhcp excluded-address 172.28.39.1
+! ip dhcp excluded-address 172.28.39.193
+! ip dhcp excluded-address 172.28.39.97
+! ip dhcp excluded-address 172.28.40.33
+! ip dhcp excluded-address 172.28.40.81
 
 
-!configuracion pool de estudiante
+! !configuracion pool de estudiante
+! ip dhcp pool estudiantes
+! network 172.28.0.0 255.255.224.0
+! default-router 172.28.0.1
+! dns-server 172.28.38.193
+! domain-name estudiantes.equipo5.edu
+
+! !Configuracion de pool de profesores
+! ip dhcp pool profesores
+! network 172.28.32.0 255.255.252.0
+! default-router 172.28.32.1
+! dns-server 172.28.38.193
+! domain-name profesores.equipo5.edu
+
+! !Configuracion de pool de directivos
+! ip dhcp pool directivos
+! network 172.28.39.0 255.255.255.224
+! default-router 172.28.39.1
+! dns-server 172.28.38.193
+! domain-name directivos.equipo5.edu
+
+! !Configuracion de pool de camaras industrial
+! ip dhcp pool camaras_II
+! network 172.28.39.192 255.255.255.224
+! default-router 172.28.39.193
+! dns-server 172.28.38.193
+! domain-name camaras_II.equipo5.edu
+
+! !-----------------------------------------------------------------
+! !Configuracion de pool de camaras administracion de emppresas
+! ip dhcp pool camaras_AE
+!  network 172.28.39.96 255.255.255.224
+!  default-router 172.28.39.97
+!  dns-server 172.28.38.193
+!  domain-name camaras_AE.equipo5.edu
+
+! !Configuracion de pool de camaras biblioteca
+! ip dhcp pool camaras_BB
+!  network 172.28.40.80 255.255.255.240
+!  default-router 172.28.40.81
+!  dns-server 172.28.38.193
+!  domain-name camaras_BB.equipo5.edu
+
+! !Configuracion de pool de camaras bioquimica
+! ip dhcp pool camaras_IB
+!  network 172.28.40.32 255.255.255.240
+!  default-router 172.28.40.33
+!  dns-server 172.28.38.193
+!  domain-name camaras_IB.equipo5.edu
+
+ip dhcp excluded-address 172.28.31.254
+ip dhcp excluded-address 172.28.35.254
+ip dhcp excluded-address 172.28.39.30
+ip dhcp excluded-address 172.28.39.222
+ip dhcp excluded-address 172.28.39.126
+ip dhcp excluded-address 172.28.40.94
+ip dhcp excluded-address 172.28.40.46
+
+! Corregir default-router
 ip dhcp pool estudiantes
-network 172.28.0.0 255.255.224.0
-default-router 172.28.0.1
-dns-server 172.28.38.193
-domain-name estudiantes.equipo5.edu
-
-!Configuracion de pool de profesores
+ no default-router
+ default-router 172.28.31.254
 ip dhcp pool profesores
-network 172.28.32.0 255.255.252.0
-default-router 172.28.32.1
-dns-server 172.28.38.193
-domain-name profesores.equipo5.edu
-
-!Configuracion de pool de directivos
+ no default-router
+ default-router 172.28.35.254
 ip dhcp pool directivos
-network 172.28.39.0 255.255.255.224
-default-router 172.28.39.1
-dns-server 172.28.38.193
-domain-name directivos.equipo5.edu
-
-!Configuracion de pool de camaras industrial
+ no default-router
+ default-router 172.28.39.30
 ip dhcp pool camaras_II
-network 172.28.39.192 255.255.255.224
-default-router 172.28.39.193
-dns-server 172.28.38.193
-domain-name camaras_II.equipo5.edu
-
-!-----------------------------------------------------------------
-!Configuracion de pool de camaras administracion de emppresas
+ no default-router
+ default-router 172.28.39.222
 ip dhcp pool camaras_AE
- network 172.28.39.96 255.255.255.224
- default-router 172.28.39.97
- dns-server 172.28.38.193
- domain-name camaras_AE.equipo5.edu
-
-!Configuracion de pool de camaras biblioteca
+ no default-router
+ default-router 172.28.39.126
 ip dhcp pool camaras_BB
- network 172.28.40.80 255.255.255.240
- default-router 172.28.40.81
- dns-server 172.28.38.193
- domain-name camaras_BB.equipo5.edu
-
-!Configuracion de pool de camaras bioquimica
+ no default-router
+ default-router 172.28.40.94
 ip dhcp pool camaras_IB
- network 172.28.40.32 255.255.255.240
- default-router 172.28.40.33
- dns-server 172.28.38.193
- domain-name camaras_IB.equipo5.edu
+ no default-router
+ default-router 172.28.40.46
+end
+copy running-config startup-config
 
 exit
 

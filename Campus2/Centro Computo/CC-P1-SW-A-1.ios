@@ -1,0 +1,57 @@
+enable
+conf terminal
+
+!Parametros basicos
+hostname CC-P1-SW-A-1
+ip domain-name equipo5.edu
+banner motd #Acceso restringido - Switch Acceso 1 CC#
+enable secret class
+service password-encryption
+
+!Console 
+line console 0
+password cisco
+login 
+exit
+
+!SSH
+username admin secret cisco
+crypto key generate rsa
+1024
+ip ssh version 2
+line vty 0 15
+login local
+transport input ssh
+exit
+
+! Configuración VTP (Cliente)
+vtp domain equipo5
+vtp version 2
+vtp mode client
+vtp password cisco
+
+! Configurar el puerto hacia el Core (G1/0/1) como troncal
+interface GigabitEthernet 0/1
+ switchport mode trunk
+ no shutdown
+exit
+
+!(Fa0/10) para conectar una PC de prueba
+!VLAN 61 (Laboratorio1_CC)
+interface range FastEthernet 0/1 - 24
+ switchport mode access
+ switchport access vlan 61
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+exit
+
+!SVI de administracion
+interface vlan 98
+ip address 172.28.50.130 255.255.255.192
+no shutdown
+exit
+ip default-gateway 172.28.50.129
+end
+!Guardar configuracion
+copy running-config startup-config
